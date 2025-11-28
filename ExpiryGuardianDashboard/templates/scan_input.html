@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Product</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='styl1.css') }}">
+<style>
+  .manual-link {
+    color: white;
+    text-decoration: none;
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+  }
+  .manual-link:hover {
+    text-decoration: underline;
+  }
+  .scan-page__camera-section {
+    margin-top: 20px;
+    text-align: center;
+  }
+  video, canvas {
+    border: 1px solid #ccc;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+  }
+  #snapshot {
+    max-width: 300px;
+    border: 2px solid #aaa;
+    border-radius: 8px;
+    margin-top: 10px;
+    display: none;
+  }
+  .btn {
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  .btn:hover {
+    background-color: #0055aa;
+  }
+  #status {
+    color: #333;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  #result {
+    margin-top: 15px;
+    background: #f8f8f8;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: left;
+  }
+  .manual-btn {
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    display: none;
+  }
+  .manual-btn:hover {
+    background-color: #e68900;
+  }
+</style>
+</head>
+<body>
+  
+<div class="main-container">
+  <div class="left-section">
+    <div class="hero-text">
+      <h1>Scan Product</h1>
+      <p class="tagline">Use your camera or upload a product image to detect MFG & EXP dates automatically.</p>
+    </div>
+  </div>
+
+  <div class="right-section">
+    <!-- Upload Form -->
+    <form action="{{ url_for('scan_image') }}" method="post" enctype="multipart/form-data" class="upload-form">
+      <input type="file" name="image" required>
+      <button type="submit" class="btn">📤 Scan Image</button>
+    </form>
+
+    <div class="box">
+      <a href="{{ url_for('manual_entry') }}" class="manual-link">✏️ Manual Entry</a>
+    </div>
+    <div class="box">
+      <a href="{{ url_for('dashboard') }}" class="manual-link">📊 Dashboard</a>
+    </div>
+    <div class="box">
+      <a href="{{ url_for('home') }}" class="manual-link">🏠 Home</a>
+    </div>
+
+    <!-- Camera Section -->
+    <div class="scan-page__camera-section">
+      <h3>🎥 Auto-Scan With Camera</h3>
+      <video id="video" autoplay playsinline></video>
+      <canvas id="canvas" style="display:none;"></canvas>
+      <img id="snapshot" alt="Captured frame preview" />
+      <p id="status">Initializing camera...</p>
+      <div id="result"></div>
+
+      <button id="stopBtn" class="btn" style="display:none;">⏹ Stop Auto Scan</button>
+      <button id="manualEntryBtn" class="manual-btn" onclick="goManual()">✏️ Go to Manual Entry</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const statusEl = document.getElementById('status');
+  const resultEl = document.getElementById('result');
+  const stopBtn = document.getElementById('stopBtn');
+  const manualBtn = document.getElementById('manualEntryBtn');
+  const snapshot = document.getElementById('snapshot');
+  let scanInterval, stream;
+  let failCount = 0;
+  let quality = 0.6; // start with medium quality
+
+  // Access camera
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then(s => {
+      stream = s;
+      video.srcObject = s;
+      statusEl.innerText = "Camera active! Scanning for MFG & EXP automatically...";
+      startAutoCapture();
+    })
+    .catch(err => {
+      statusEl.innerText = "⚠️ Camera access failed: " + err.message;
+      manualBtn.style.display = "inline-block";
+    });
+
+  function startAutoCapture() {
+    scanInterval = setInterval(captureAndSend, 5000);
+    stopBtn.style.display = "inline-block";
+  }
+
+  function stopAutoCapture() {
+    clearInterval(scanInterval);
+    if (stream) {
+      stream.getTracks().forEach(t => t.stop());
+    }
+    statusEl.innerText = "⏹ Auto scanning stopped.";
+  }
+
+  stopBtn.addEventListener('click', stopAutoCapture);
+
+  function goManual() {
+    window.location.href = "{{ url_for('manual_entry') }}";
+  }
+
+  function showSnapshot(imgData) {
+    snapshot.src = imgData;
+    snapshot.style.display = "block";
+  }
+
+  function captureAndSend() {
+    const width = video.videoWidth;
+    const height = video.videoHeight;
+    if (width === 0 || height === 0) return;
+
+    canvas.width = 480;
+    canvas.height = 360;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, width, height);
+
+    const imageData = canvas.toDataURL('image/jpeg', quality);
+    showSnapshot(imageData);
+
+    fetch("{{ url_for('capture') }}", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: "image=" + encodeURIComponent(imageData)
+    })
+    .then(response => {
+      if (response.status === 413) {
+        if (quality > 0.3) {
+          quality -= 0.2;
+          statusEl.innerText = "⚠️ Image too large. Retrying with lower quality...";
+          setTimeout(captureAndSend, 2000);
+          return Promise.reject("retry");
+        } else {
+          throw new Error("413 Request Entity Too Large");
+        }
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.status === "success") {
+        let expStatus = "❔";
+        if (data.state === "VALID") expStatus = "✅";
+        if (data.state === "NEAR_EXPIRY") expStatus = "⚠️";
+        if (data.state === "EXPIRED") expStatus = "❌";
+
+        statusEl.innerHTML = `${expStatus} <span class="success">Status: <b>${data.state}</b></span><br>
+          <b>MFG:</b> ${data.mfg}<br>
+          <b>EXP:</b> ${data.exp}<br>
+          <b>Days Left:</b> ${data.days}`;
+        stopAutoCapture();
+      } else if (data.status === "manual") {
+        statusEl.innerHTML = "<span class='error'>" + data.message + " Please enter manually.</span>";
+        manualBtn.style.display = "inline-block";
+      }
+    })
+    .catch(err => {
+      if (err === "retry") return;
+      statusEl.innerHTML = "<span class='error'>⚠️ " + err.message + "</span>";
+      if (scanInterval) clearInterval(scanInterval);
+      manualBtn.style.display = "inline-block";
+    });
+  }
+</script>
+
+</body>
+</html>

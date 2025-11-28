@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Scan or Enter Product Info</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="form-container">
+    <h1>Upload Product Image or Enter Manually</h1>
+    <form method="POST" action="/process" enctype="multipart/form-data">
+      <label>Upload Image:</label>
+      <input type="file" name="product_image" accept="image/*"><br><br>
+
+      <label>Manufacturing Date:</label>
+      <input type="date" name="mfg"><br><br>
+
+      <label>Expiry Date:</label>
+      <input type="date" name="exp"><br><br>
+
+      <button type="submit">Submit</button>
+    </form>
+    <a href="/">🔙 Back to Dashboard</a>
+  </div>
+</body>
+</html>

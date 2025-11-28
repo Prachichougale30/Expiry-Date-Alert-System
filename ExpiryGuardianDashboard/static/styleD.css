@@ -1,0 +1,221 @@
+/* ========================================================================== 
+   Expiry Guardian - Main Stylesheet
+   ========================================================================== */
+
+/* --- Google Font Import --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+/* --- Color Palette & Global Variables --- */
+:root {
+  --primary-color: #18c29c; /* Main Teal */
+  --dark-text: #2D3748;     /* Headings */
+  --light-text: #718096;    /* Paragraphs */
+  --background-color: #F8F9FA; /* Page Background */
+  --container-bg: #FFFFFF; /* Card/Container Background */
+  --border-color: #E2E8F0;  /* Light Borders */
+
+  --status-valid: #28a745;   /* Green */
+  --status-valid-bg: #eaf6ec;
+  --status-expired: #dc3545;  /* Red */
+  --status-expired-bg: #faeaea;
+  --status-near-expiry: #ffc107; /* Yellow */
+  --status-near-expiry-bg: #fff8e7;
+}
+
+/* --- Reset & Body --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--background-color);
+  color: var(--dark-text);
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+/* ========================================================================== 
+   Navbar Styles
+   ========================================================================== */
+.navbar {
+  width: 100%;
+  background-color: var(--primary-color);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.navbar .logo {
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.navbar .nav-links {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.navbar .nav-links a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.navbar .nav-links a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.navbar .nav-links span {
+  font-weight: 500;
+  margin-right: 1rem;
+}
+
+/* ========================================================================== 
+   Dashboard Page Titles & Messages
+   ========================================================================== */
+h2.dashboard-page__title { 
+  text-align: center; 
+  font-size: 2.5rem; 
+  margin-bottom: 2rem; 
+  color: var(--dark-text); 
+}
+
+.dashboard-page__empty-message { 
+  text-align: center; 
+  color: var(--light-text); 
+  font-size: 1.1rem; 
+  padding: 2rem; 
+}
+
+/* ========================================================================== 
+   Dashboard Grid & Sections
+   ========================================================================== */
+.dashboard-section {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 2.5rem auto;
+}
+
+.dashboard-section__header {
+  font-size: 1.25rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+.dashboard-section__header--valid { background-color: var(--status-valid-bg); color: var(--status-valid); border-left: 5px solid var(--status-valid); }
+.dashboard-section__header--near_expiry { background-color: var(--status-near-expiry-bg); color: #c89500; border-left: 5px solid var(--status-near-expiry); }
+.dashboard-section__header--expired { background-color: var(--status-expired-bg); color: var(--status-expired); border-left: 5px solid var(--status-expired); }
+
+.dashboard-section__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+/* ========================================================================== 
+   Product Cards
+   ========================================================================== */
+.product-card { 
+  background-color: var(--container-bg); 
+  border-radius: 12px; 
+  padding: 1.5rem; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); 
+  border-left: 5px solid var(--border-color); 
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; 
+}
+.product-card:hover { 
+  transform: translateY(-5px); 
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); 
+}
+.product-card p { 
+  margin: 0.5rem 0; 
+  color: var(--light-text); 
+  font-size: 0.9rem; 
+}
+.product-card p strong { color: var(--dark-text); }
+
+/* Card Status Modifiers */
+.product-card--valid { border-left-color: var(--status-valid); }
+.product-card--expired { border-left-color: var(--status-expired); }
+.product-card--near_expiry { border-left-color: var(--status-near-expiry); }
+
+/* Status Badge Styles */
+.status-badge { 
+  display: inline-block; 
+  padding: 4px 10px; 
+  border-radius: 12px; 
+  font-size: 0.8rem; 
+  font-weight: 600; 
+  text-transform: uppercase; 
+  color: #fff; 
+}
+.status-badge--valid { background-color: var(--status-valid); }
+.status-badge--expired { background-color: var(--status-expired); }
+.status-badge--near_expiry { background-color: var(--status-near-expiry); color: var(--dark-text); }
+
+/* ========================================================================== 
+   Links & Buttons
+   ========================================================================== */
+a.back-link { 
+  display: block; 
+  width: fit-content; 
+  margin: 2rem auto 0; 
+  padding: 10px 20px; 
+  background-color: var(--dark-text); 
+  color: #fff; 
+  text-decoration: none; 
+  border-radius: 8px; 
+  transition: background-color 0.3s ease; 
+}
+a.back-link:hover { background-color: #4A5568; }
+
+/* ========================================================================== 
+   Forms / Inputs / Buttons
+   ========================================================================== */
+input, select, textarea {
+  font-family: 'Poppins', sans-serif;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  margin: 0.5rem 0;
+}
+
+button {
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  background-color: var(--primary-color);
+  color: #fff;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #149f87;
+}
+
+/* ========================================================================== 
+   Tables (if needed)
+   ========================================================================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+}
+th, td {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  text-align: center;
+}
+th { background-color: #f2f2f2; }
+.status-VALID { background-color: var(--status-valid-bg); color: var(--status-valid); }
+.status-NEAR_EXPIRY { background-color: var(--status-near-expiry-bg); color: #856404; }
+.status-EXPIRED { background-color: var(--status-expired-bg); color: var(--status-expired); }

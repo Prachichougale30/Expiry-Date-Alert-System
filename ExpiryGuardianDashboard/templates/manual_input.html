@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manual Entry - ExpiryGuardian</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f4f7f9;
+            text-align: center;
+            padding: 40px;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            padding: 40px;
+            display: inline-block;
+            width: 350px;
+        }
+        input, button {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        a {
+            display: block;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+        a:hover {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>✏️ Manual Product Entry</h2>
+    <div class="container">
+        <form method="POST" action="{{ url_for('manual_entry') }}">
+            <input type="text" name="product_name" placeholder="Product Name" required>
+            <input type="date" name="mfg_date" required>
+            <input type="date" name="exp_date" required>
+            <button type="submit">Add Product</button>
+        </form>
+
+        <a href="{{ url_for('dashboard') }}">📊 Go to Dashboard</a>
+        <a href="{{ url_for('scan_input') }}">📸 Back to Scan</a>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ShopGuard - Login</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #ffffff);
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-container {
+      display: flex;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      width: 850px;
+      max-width: 95%;
+      height: 480px;
+    }
+
+    .image-section {
+      flex: 1;
+      background: url("/static/uploads/man2.png") center/cover no-repeat;
+    }
+
+    .form-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 50px;
+      position: relative;
+    }
+
+    .logo {
+      width: 70px;
+      height: 70px;
+      background: #e0f7fa;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .logo i {
+      font-size: 28px;
+      color: #00bfa6;
+    }
+
+    h1 {
+      margin: 5px 0;
+      color: #333;
+      font-size: 26px;
+    }
+
+    h3 {
+      color: #666;
+      font-weight: normal;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin: 10px 0;
+      font-size: 15px;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    input:focus {
+      border-color: #00bfa6;
+      box-shadow: 0 0 4px rgba(0, 191, 166, 0.4);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      border-radius: 25px;
+      border: none;
+      background: #00bfa6;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #009e8b;
+    }
+
+    .options {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+
+    .options a {
+      text-decoration: none;
+      color: #00bfa6;
+    }
+
+    .options a:hover {
+      text-decoration: underline;
+    }
+
+    .message {
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .success {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    @media (max-width: 768px) {
+      .login-container {
+        flex-direction: column;
+        height: auto;
+      }
+      .image-section {
+        height: 200px;
+      }
+    }
+  </style>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="login-container">
+    <div class="image-section"></div>
+
+    <div class="form-section">
+      <div class="logo">
+        <i class="fas fa-shopping-cart"></i>
+      </div>
+      <h3>Expiry Alert System</h3>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, msg in messages %}
+            <div class="message {{ category }}">{{ msg }}</div>
+            {% if category == 'success' %}
+              <script>
+                alert("Login Successfully!");
+              </script>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST" action="/login">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+
+        <div class="options">
+          <label><input type="checkbox"> Remember me</label>
+          <a href="#">Forgot Password?</a>
+        </div>
+
+        <button type="submit">LOG IN</button>
+      </form>
+
+      <p style="margin-top:15px;">Don’t have an account? <a href="{{ url_for('register') }}">Create Account</a></p>
+    </div>
+  </div>
+</body>
+</html>

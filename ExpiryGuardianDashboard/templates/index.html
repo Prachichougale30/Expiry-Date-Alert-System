@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🧠 AI Expiry Guardian</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container">
+        <div class="logo">
+          <img
+            src="{{ url_for('static', filename='img/logo1.png') }}"
+            alt="Expiry Guardian Logo"
+            width="100"
+          />
+          <span>Expiry Guardian</span>
+        </div>
+        <nav class="nav-links">
+          <a href="#features">Features</a>
+          {% if session.get('user_id') %}
+          <a href="{{ url_for('dashboard') }}">Dashboard</a>
+          <a href="{{ url_for('logout') }}" class="btn-login">Logout</a>
+          {% else %}
+          <a href="{{ url_for('login') }}" class="btn-login">Login</a>
+          {% endif %}
+        </nav>
+      </div>
+    </header>
+
+    <div class="hero-main">
+      <div class="container hero-content">
+        <div class="hero-text-area">
+          <h1 class="main-title">Your Smart Expiry Manager</h1>
+          <p class="hero-tagline">
+            An AI system that scans manufacturing and expiry dates from your
+            products, sending you smart alerts to prevent losses and ensure
+            safety.
+          </p>
+          <div class="hero-buttons">
+            {% if session.get('user_id') %}
+            <a href="{{ url_for('scan_input') }}" class="btn-hero-primary"
+              >📷 Scan a Product Now</a
+            >
+            <a href="{{ url_for('dashboard') }}" class="btn-hero-secondary"
+              >📊 View Dashboard</a
+            >
+            {% else %}
+            <a href="{{ url_for('login') }}" class="btn-hero-primary"
+              >Login to Scan Product</a
+            >
+            {% endif %}
+          </div>
+        </div>
+        <div class="hero-image-area">
+          <img
+            src="{{ url_for('static', filename='img/girl.png') }}"
+            alt="Hero illustration of shopkeeper and products"
+            class="hero-illustration"
+          />
+        </div>
+      </div>
+    </div>
+
+    <section id="features" class="features-alt">
+      <div class="container">
+        <div class="section-header">
+          <h2>Our Smart Features</h2>
+          <p>Simplified tools for efficient inventory management.</p>
+        </div>
+
+        <div class="feature-card right-text">
+          <div class="feature-image">
+            <img
+              src="{{ url_for('static', filename='img/ai.png') }}"
+              alt="AI scanning a medicine box"
+            />
+          </div>
+          <div class="feature-content">
+            <h3>🧡 AI-Powered Date Detection</h3>
+            <p>
+              Our advanced OCR quickly scans and accurately extracts
+              manufacturing and expiry dates from any product label.
+            </p>
+          </div>
+        </div>
+
+        <div class="feature-card left-text">
+          <div class="feature-content">
+            <h3>🔔 Real-Time Expiry Alerts</h3>
+            <p>
+              Receive instant notifications for products nearing expiry or
+              already expired, helping you minimize waste.
+            </p>
+          </div>
+          <div class="feature-image">
+            <img
+              src="{{ url_for('static', filename='img/img.png') }}"
+              alt="Pharmacist receiving a notification alert"
+            />
+          </div>
+        </div>
+
+        <div class="feature-card right-text">
+          <div class="feature-image">
+            <img
+              src="{{ url_for('static', filename='img/logo.png') }}"
+              alt="Shop products organized in the cloud"
+            />
+          </div>
+          <div class="feature-content">
+            <h3>🌍 Cloud-Based Inventory</h3>
+            <p>
+              Access your entire product catalog and scan history securely from
+              any device, anywhere, anytime.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <p>Made with ❤️ by Prachi</p>
+        <p>&copy; Expiry Guardian.</p>
+      </div>
+    </footer>
+  </body>
+</html>

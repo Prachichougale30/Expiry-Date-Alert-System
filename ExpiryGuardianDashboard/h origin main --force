@@ -1,0 +1,70 @@
+[33mcommit ccb3e9f77bddff90e357d1511f184fd3109b7ef8[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Prachichougale30 <prachichougale2530@gmail.com>
+Date:   Sat Nov 1 20:08:38 2025 +0530
+
+    Remove Firebase key and clean repository
+
+ .gitignore | 13 [32m+++++++++++++[m
+ 1 file changed, 13 insertions(+)
+
+[33mcommit a070e1a1086b17aa75b1dd3e4a46605659f12a01[m
+Author: Prachichougale30 <prachichougale2530@gmail.com>
+Date:   Sat Nov 1 19:55:55 2025 +0530
+
+    Initial commit of Expiry Guardian Dashboard
+
+ .env                                               |    2 [32m+[m
+ app.py                                             |  423 [32m++++++[m
+ data.csv                                           |    6 [32m+[m
+ .../Gemini_Generated_Image_fgb85jfgb85jfgb8.png    |  Bin [31m0[m -> [32m5767348[m bytes
+ static/img/ai.png                                  |  Bin [31m0[m -> [32m1237044[m bytes
+ static/img/girl.png                                |  Bin [31m0[m -> [32m894971[m bytes
+ static/img/girl1.png                               |  Bin [31m0[m -> [32m1294462[m bytes
+ static/img/img.png                                 |  Bin [31m0[m -> [32m594741[m bytes
+ static/img/logo.png                                |  Bin [31m0[m -> [32m1004070[m bytes
+ static/img/logo1.png                               |  Bin [31m0[m -> [32m255049[m bytes
+ static/login.css                                   |   75 [32m++[m
+ static/styl1.css                                   |  306 [32m+++++[m
+ static/style.css                                   | 1373 [32m++++++++++++++++++++[m
+ static/style2.css                                  |  127 [32m++[m
+ static/style3.css                                  |  154 [32m+++[m
+ static/styleD.css                                  |  221 [32m++++[m
+ static/uploads/bg.jpg                              |  Bin [31m0[m -> [32m18606[m bytes
+ static/uploads/camera_1759763631.png               |  Bin [31m0[m -> [32m94688[m bytes
+ static/uploads/camera_1759763729.png               |  Bin [31m0[m -> [32m94688[m bytes
+ static/uploads/camera_1759763995.png               |  Bin [31m0[m -> [32m84710[m bytes
+ static/uploads/camera_1759813589.png               |  Bin [31m0[m -> [32m89809[m bytes
+ static/uploads/camera_1760161345.png               |  Bin [31m0[m -> [32m91025[m bytes
+ static/uploads/camera_1760195333.png               |  Bin [31m0[m -> [32m7979[m bytes
+ static/uploads/camera_1760195357.png               |  Bin [31m0[m -> [32m7979[m bytes
+ static/uploads/camera_1760195417.png               |  Bin [31m0[m -> [32m7979[m bytes
+ static/uploads/camera_1760195786.png               |  Bin [31m0[m -> [32m7979[m bytes
+ static/uploads/camera_1760195837.png               |  Bin [31m0[m -> [32m7979[m bytes
+ static/uploads/camera_1760195897.png               |  Bin [31m0[m -> [32m7979[m bytes
+ static/uploads/capture.jpg                         |  Bin [31m0[m -> [32m7765[m bytes
+ static/uploads/capture.png                         |  Bin [31m0[m -> [32m2011[m bytes
+ static/uploads/exp1.jpg                            |  Bin [31m0[m -> [32m183278[m bytes
+ static/uploads/exp2.jpeg                           |  Bin [31m0[m -> [32m5243[m bytes
+ static/uploads/exp3.jpg                            |  Bin [31m0[m -> [32m30963[m bytes
+ static/uploads/man.png                             |  Bin [31m0[m -> [32m1020748[m bytes
+ static/uploads/man2.png                            |  Bin [31m0[m -> [32m1287037[m bytes
+ static/uploads/mfg.jpeg                            |  Bin [31m0[m -> [32m62425[m bytes
+ templates/camera.html                              |  131 [32m++[m
+ templates/dashboard.html                           |   63 [32m+[m
+ templates/index.html                               |  133 [32m++[m
+ templates/input.html                               |   25 [32m+[m
+ templates/login.html                               |  192 [32m+++[m
+ templates/manual_input.html                        |   66 [32m+[m
+ templates/register.html                            |  179 [32m+++[m
+ templates/scan_input.html                          |  225 [32m++++[m
+ templates/scan_result.html                         |   69 [32m+[m
+ 45 files changed, 3770 insertions(+)
+
+[33mcommit 3214ceba4eac8c94f6fd60084bdf9be785ddcf14[m
+Author: Prachichougale30 <prachichougale2530@gmail.com>
+Date:   Sat Nov 1 19:50:39 2025 +0530
+
+    expiryAlert
+
+ README.md | Bin [31m0[m -> [32m58[m bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)

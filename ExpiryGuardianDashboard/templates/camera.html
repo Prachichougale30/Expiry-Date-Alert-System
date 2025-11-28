@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auto Scan Product</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='styl1.css') }}">
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
+  h1 { text-align: center; }
+  .camera-section { text-align: center; margin-top: 20px; }
+  video { width: 100%; max-width: 400px; border-radius: 10px; border: 1px solid #ccc; }
+  #status { margin-top: 15px; font-weight: bold; color: #333; }
+  #snapshot { margin-top: 15px; max-width: 300px; display: none; border: 2px solid #aaa; border-radius: 8px;}
+  .error { color: #e53935; font-weight: bold;}
+  .success { color: #26a69a; font-weight: bold;}
+</style>
+</head>
+<body>
+
+<h1>🎥 Auto Scan With Camera</h1>
+
+<div class="camera-section">
+  <video id="video" autoplay playsinline></video>
+  <canvas id="canvas" style="display:none;"></canvas>
+  <img id="snapshot" />
+  <p id="status">Initializing camera...</p>
+</div>
+
+<!-- 🔊 Optional Sounds -->
+<audio id="successSound" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_9f4a5f96e3.mp3?filename=success-1-6297.mp3"></audio>
+<audio id="errorSound" src="https://cdn.pixabay.com/download/audio/2021/09/30/audio_eead8c2a77.mp3?filename=error-126627.mp3"></audio>
+
+<script>
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const statusEl = document.getElementById('status');
+const snapshot = document.getElementById('snapshot');
+const successSound = document.getElementById("successSound");
+const errorSound = document.getElementById("errorSound");
+let scanInterval = null;
+
+function showError(message) {
+  statusEl.innerHTML = "<span class='error'>" + message + "</span><br>"
+    + "Please enable camera permissions and reload the page.";
+  errorSound.play();
+}
+
+// Access camera
+navigator.mediaDevices.getUserMedia({ video: true })
+  .then(stream => {
+    video.srcObject = stream;
+    statusEl.innerText = "Camera active! Scanning for MFG & EXP automatically...";
+    startAutoCapture();
+  })
+  .catch(err => {
+    showError("⚠️ Camera access failed: " + err.name + ". " + err.message);
+  });
+
+function showSnapshot(imgData) {
+  snapshot.src = imgData;
+  snapshot.style.display = "block";
+}
+
+function startAutoCapture() {
+  scanInterval = setInterval(() => {
+    captureAndSend();
+  }, 5000); // every 5 seconds
+}
+
+function captureAndSend() {
+  const width = video.videoWidth;
+  const height = video.videoHeight;
+  if (width === 0 || height === 0) return;
+
+  // ✅ Compress image before sending
+  canvas.width = 480;
+  canvas.height = 360;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  const imageData = canvas.toDataURL('image/jpeg', 0.5); // smaller size
+  showSnapshot(imageData);
+
+  fetch("{{ url_for('capture') }}", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: "image=" + encodeURIComponent(imageData)
+  })
+  .then(response => {
+    if (response.status === 413) {
+      throw new Error("413 Request Entity Too Large: The image data exceeds the limit.");
+    }
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "success") {
+      successSound.play();
+
+      let expStatus = "❔";
+      if (data.state === "VALID") expStatus = "✅";
+      if (data.state === "NEAR_EXPIRY") expStatus = "⚠️";
+      if (data.state === "EXPIRED") expStatus = "❌";
+
+      statusEl.innerHTML = `${expStatus} <span class="success">Status: <b>${data.state}</b></span><br>
+        <b>MFG:</b> ${data.mfg}<br>
+        <b>EXP:</b> ${data.exp}<br>
+        <b>Days Left:</b> ${data.days}<br><br>
+        Redirecting to dashboard... ⏳`;
+
+      if (scanInterval) clearInterval(scanInterval);
+      setTimeout(() => {
+        window.location.href = "{{ url_for('dashboard') }}";
+      }, 3000);
+    }
+
+    else if (data.status === "manual") {
+      errorSound.play();
+      statusEl.innerHTML = "<span class='error'>⚠️ " + data.message + " Please enter manually.</span>";
+    }
+  })
+  .catch(err => {
+    console.error("❌ Error:", err);
+    errorSound.play();
+    statusEl.innerHTML = "<span class='error'>⚠️ " + err.message + "</span><br>Please try again manually.";
+  });
+}
+</script>
+
+</body>
+</html>

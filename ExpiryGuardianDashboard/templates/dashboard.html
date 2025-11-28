@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styleD.css') }}"
+    />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container">
+        <div class="logo">Expiry Guardian</div>
+        <nav class="nav-links">
+          <span>👤 Welcome, {{ session['username']}}</span>
+     
+             <a href="{{ url_for('home') }}">🏠Home</a>
+             <a href="{{ url_for('scan_input') }}">📷Scan Product</a>
+          <a href="{{ url_for('logout') }}">🚪 Logout</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <h2 class="dashboard-page__title">Your Products</h2>
+
+      {% if entries %}
+      <div class="dashboard-section__grid">
+        {% for entry in entries %}
+        <div
+          class="product-card product-card--{% if entry[4]=='VALID' %}valid{% elif entry[4]=='EXPIRED' %}expired{% else %}near_expiry{% endif %}"
+        >
+          <h4>{{ entry[1] }}</h4>
+          <p><strong>MFG:</strong> {{ entry[2] }}</p>
+          <p><strong>EXP:</strong> {{ entry[3] }}</p>
+          <p>
+            <strong>Status:</strong>
+            <span
+              class="status-badge status-badge--{% if entry[4]=='VALID' %}valid{% elif entry[4]=='EXPIRED' %}expired{% else %}near_expiry{% endif %}"
+            >
+              {{ entry[4] }}
+            </span>
+          </p>
+          <p>
+            <strong>Days Left:</strong> {{ entry[5] if entry[5] is not none else
+            '-' }}
+          </p>
+
+          <!-- ✅ Delete Button -->
+          <form action="{{ url_for('delete_product', product_id=entry[0]) }}" method="POST">
+            <button type="submit" class="delete-btn">🗑️ Remove</button>
+          </form>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="dashboard-page__empty-message">No products added yet.</p>
+      {% endif %}
+    </main>
+  </body>
+</html>
